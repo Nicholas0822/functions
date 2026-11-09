@@ -8,17 +8,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CityController {
     private final ChatClient chatClient;
+    private final WeatherTool weatherTool;
 
-    public CityController(ChatClient.Builder builder) {
-        this.chatClient = builder.build();
+    public CityController(ChatClient.Builder builder, WeatherTool weatherTool) {
+        this.chatClient = builder.
+                build();
+        this.weatherTool = weatherTool;
     }
 
     @GetMapping("/cities")
     public String cityFaq(@RequestParam String message) {
         return chatClient
                 .prompt()
-                .system("You are a helpful AI Assistant answering questions about cities around the world.")
                 .user(message)
+                .tools(weatherTool)
                 .call()
                 .content();
     }
